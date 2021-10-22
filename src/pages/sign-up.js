@@ -19,6 +19,40 @@ export default function SignUp() {
 		e.preventDefault()
 
 		const usernameExists = await doesUsernameExist(username)
+		if (!usernameExists) {
+			try {
+				const createdUserResult = await firebase
+					.auth()
+					.createUserWithEmailAndPassword(emailAddress, password)
+
+				// authentication
+				// -> emailAddress & password & username (displayName)
+				await createdUserResult.user.updateProfile({
+					displayName: username
+				})
+
+				// firebase user collection (create firebase document)
+				await firebase.firestore().collection("users").add({
+					userId: createdUserResult.user.uid,
+					username: username.toLowerCase(),
+					fullName: fullName,
+					emailAddress: emailAddress.toLowerCase(),
+					following: [],
+					followers: [],
+					dateCreated: Date.now()
+				})
+
+				history.push(ROUTES.DASHBOARD)
+			} catch (error) {
+				setFullName("")
+				setEmailAddress("")
+				setPassword("")
+				setError(error.message)
+			}
+		} else {
+			setUsername("")
+			setError("That username already exists, please try another.")
+		}
 	}
 
 	useEffect(() => {

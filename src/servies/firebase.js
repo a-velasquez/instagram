@@ -9,5 +9,6 @@ export async function doesUsernameExist(username) {
 
 	console.log(result)
 
-	return result.docs.map((user) => user.data().length > 0)
+	// returns user if username exists
+	return result.docs.length > 0
 }
