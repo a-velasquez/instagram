@@ -1,6 +1,8 @@
 import { func } from "prop-types"
 import { firebase, FieldValue } from "../lib/firebase"
 
+// named exports
+
 export async function doesUsernameExist(username) {
 	const result = await firebase
 		.firestore()
@@ -47,8 +49,8 @@ export async function getSuggestedProfiles(userId, following) {
 }
 
 export async function updateLoggedInUserFollowing(
-	loggedInUserDocId, // currently logged in user document id (karl's profile)
-	profileId, // the user that karl requests to follow
+	loggedInUserDocId,
+	profileId,
 	isFollowingProfile // true/false (am i currently following this person?)
 ) {
 	return firebase
@@ -63,9 +65,9 @@ export async function updateLoggedInUserFollowing(
 }
 
 export async function updateFollowedUserFollowers(
-	profileDocId, // currently logged in user document id (karl's profile)
-	loggedInUserDocId, // the user that karl requests to follow
-	isFollowingProfile // true/false (am i currently following this person?)
+	profileDocId,
+	loggedInUserDocId,
+	isFollowingProfile
 ) {
 	return firebase
 		.firestore()
@@ -76,4 +78,31 @@ export async function updateFollowedUserFollowers(
 				? FieldValue.arrayRemove(loggedInUserDocId)
 				: FieldValue.arrayUnion(loggedInUserDocId)
 		})
+}
+
+export async function getPhotos(userId, following) {
+	const result = await firebase
+		.firestore()
+		.collection("photos")
+		.where("userId", "in", following)
+		.get()
+
+	const userFollowedPhotos = result.docs.map((photo) => ({
+		...photo.data(),
+		docId: photo.id
+	}))
+
+	const photosWithUserDetails = await Promise.all(
+		userFollowedPhotos.map(async (photo) => {
+			let userLikedPhoto = false
+			if (photo.likes.includes(userId)) {
+				userLikedPhoto = true
+			}
+			const user = await getUserByUserId(photo.userId)
+			const { username } = user[0]
+			return { username, ...photo, userLikedPhoto }
+		})
+	)
+
+	return photosWithUserDetails
 }
