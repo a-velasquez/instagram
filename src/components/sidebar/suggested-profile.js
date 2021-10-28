@@ -9,15 +9,30 @@ export default function SuggestedProfile({
 	profileId,
 	userId
 }) {
-	return (
-		<img
-			src={`/images/avatars/${username}.jpg`}
-			alt=''
-			onError={(e) => {
-				e.target.src = DEFAULT_IMAGE_PATH
-			}}
-		/>
-	)
+	const [followed, setFollowed] = useState(false)
+	return !followed ? (
+		<div className='flex flex-row items-center align-items justify-between'>
+			<div className='flex items-center justify-between'>
+				<img
+					className='rounded-full w-10 flex mr-3'
+					src={`/images/avatars/${username}.jpg`}
+					alt='profile'
+					onError={(e) => {
+						e.target.src = DEFAULT_IMAGE_PATH
+					}}
+				/>
+				<Link to={`/p/${username}`}>
+					<p className='font-bold text-sm'>{username}</p>
+				</Link>
+			</div>
+			<button
+				type='button'
+				className='text-xs font-bold text-blue-medium'
+				onClick={() => console.log("Followed this user!")}>
+				Follow
+			</button>
+		</div>
+	) : null
 }
 
 SuggestedProfile.propTypes = {
@@ -26,5 +41,3 @@ SuggestedProfile.propTypes = {
 	profileId: PropTypes.string.isRequired,
 	userId: PropTypes.string.isRequired
 }
-
-// <img alt='' src={`/images/avatars/${username}.jpg`} />
