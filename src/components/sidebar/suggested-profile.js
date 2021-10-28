@@ -1,6 +1,7 @@
 import { useState, useContext } from "react"
 import PropTypes from "prop-types"
 import { Link } from "react-router-dom"
+import { DEFAULT_IMAGE_PATH } from "../../constants/paths"
 
 export default function SuggestedProfile({
 	profileDocId,
@@ -8,7 +9,15 @@ export default function SuggestedProfile({
 	profileId,
 	userId
 }) {
-	return <img alt='' src={`/images/avatars/${username}.jpg`} />
+	return (
+		<img
+			src={`/images/avatars/${username}.jpg`}
+			alt=''
+			onError={(e) => {
+				e.target.src = DEFAULT_IMAGE_PATH
+			}}
+		/>
+	)
 }
 
 SuggestedProfile.propTypes = {
@@ -17,3 +26,5 @@ SuggestedProfile.propTypes = {
 	profileId: PropTypes.string.isRequired,
 	userId: PropTypes.string.isRequired
 }
+
+// <img alt='' src={`/images/avatars/${username}.jpg`} />
