@@ -15,9 +15,10 @@ const User = ({ username, fullName }) =>
 				<img
 					className='rounded-full w-16 flex mr-3'
 					alt=''
-					src={
-						!username ? `/images/avatars/${username}.jpg` : DEFAULT_IMAGE_PATH
-					}
+					src={`/images/avatars/${username}.jpg`}
+					onError={(e) => {
+						e.target.src = DEFAULT_IMAGE_PATH
+					}}
 				/>
 			</div>
 			<div className='col-span-3'>
