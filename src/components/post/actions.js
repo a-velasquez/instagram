@@ -18,6 +18,18 @@ export default function Actions({
 
 	const handleToggleLiked = async () => {
 		setToggleLiked((toggleLiked) => !toggleLiked)
+
+		await firebase
+			.firestore()
+			.collection("photos")
+			.doc(docId)
+			.update({
+				likes: toggleLiked
+					? FieldValue.arrayRemove(userId)
+					: FieldValue.arrayUnion(userId)
+			})
+
+		setLikes((likes) => (toggleLiked ? likes - 1 : likes + 1))
 	}
 
 	return (
