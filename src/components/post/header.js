@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import PropTypes from "prop-types"
 
 export default function Header({ username }) {
 	return (
@@ -15,4 +16,8 @@ export default function Header({ username }) {
 			</div>
 		</div>
 	)
+}
+
+Header.propTypes = {
+	username: PropTypes.string.isRequired
 }
