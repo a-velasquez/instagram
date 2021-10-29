@@ -1,5 +1,6 @@
 import PropTypes from "prop-types"
 import Header from "./header"
+import Image from "./image"
 
 export default function Post({ content }) {
 	// components needed:
@@ -7,7 +8,7 @@ export default function Post({ content }) {
 	return (
 		<div className='rounded col-span-4 border bg-white border-gray-primary mb-12'>
 			<Header username={content.username} />
-			<img src={content.imageSrc} />
+			<Image src={content.imageSrc} />
 		</div>
 	)
 }
