@@ -1,7 +1,12 @@
 import PropTypes from "prop-types"
 
-export default function Post() {
-	return <p>Post</p>
+export default function Post({ content }) {
+	return (
+		<div>
+			<p>Post</p>
+			<img src={content.imageSrc} />
+		</div>
+	)
 }
 
 Post.propTypes = {
