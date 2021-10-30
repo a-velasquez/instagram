@@ -34,7 +34,7 @@ export default function Actions({
 
 	return (
 		<>
-			<div className='flex justify-between p-4'>
+			<div className='flex p-4'>
 				<div className='flex'>
 					<svg
 						onClick={handleToggleLiked}
@@ -81,7 +81,7 @@ export default function Actions({
 				</div>
 			</div>
 			<div className='p-4 py-0'>
-				<p className='font-bold mb-4'>
+				<p className='font-bold'>
 					{likes === 1 ? `${likes} like` : `${likes} likes`}
 				</p>
 			</div>
