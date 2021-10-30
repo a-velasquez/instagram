@@ -23,9 +23,9 @@ export default function Post({ content }) {
 			<Footer caption={content.caption} username={content.username} />
 			<Comments
 				docId={content.docId}
-				commentInput={commentInput}
 				comments={content.comments}
 				posted={content.dateCreated}
+				commentInput={commentInput}
 			/>
 		</div>
 	)
