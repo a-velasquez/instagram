@@ -10,7 +10,7 @@ export default function Actions({
 	handleFocus
 }) {
 	const {
-		user: { uid: userId = "" }
+		user: { uid: userId }
 	} = useContext(UserContext)
 	const [toggleLiked, setToggleLiked] = useState(likedPhoto)
 	const [likes, setLikes] = useState(totalLikes)
@@ -80,11 +80,18 @@ export default function Actions({
 					</svg>
 				</div>
 			</div>
-			<div className='p-4 py-0 mb-4'>
+			<div className='p-4 py-0'>
 				<p className='font-bold'>
 					{likes === 1 ? `${likes} like` : `${likes} likes`}
 				</p>
 			</div>
 		</>
 	)
+}
+
+Actions.propTypes = {
+	docId: PropTypes.string.isRequired,
+	totalLikes: PropTypes.number.isRequired,
+	likedPhoto: PropTypes.bool.isRequired,
+	handleFocus: PropTypes.func.isRequired
 }
