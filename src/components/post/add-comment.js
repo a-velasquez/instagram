@@ -39,7 +39,17 @@ export default function AddComment({
 					placeholder='Add a comment...'
 					value={comment}
 					onChange={({ target }) => setComment(target.value)}
+					ref={commentInput}
 				/>
+				<button
+					className={`text-sm font-bold text-blue-medium ${
+						!comment && "opacity-25"
+					}`}
+					type='button'
+					disabled={comment.length < 1}
+					onClick={handleSubmitComment}>
+					Post
+				</button>
 			</form>
 		</div>
 	)
