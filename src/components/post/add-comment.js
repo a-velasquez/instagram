@@ -18,8 +18,19 @@ export default function AddComment({
 
 	const handleSubmitComment = (e) => {
 		e.preventDefault()
+		// create new array
+		// put new comment in there
+		// add the old comments
+		// now wh have a new array with the new comment and old comments
+		setComments([{ displayName, comment }, ...comments])
+		console.log(comment)
+		setComment("")
 
-		return null
+		return firebase
+			.firestore()
+			.collection("photos")
+			.doc(docId)
+			.update({ comments: FieldValue.arrayUnion({ displayName, comment }) })
 	}
 
 	return (
