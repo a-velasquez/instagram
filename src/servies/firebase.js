@@ -1,27 +1,35 @@
-import { func } from "prop-types"
 import { firebase, FieldValue } from "../lib/firebase"
-
-// named exports
 
 export async function doesUsernameExist(username) {
 	const result = await firebase
 		.firestore()
 		.collection("users")
-		.where("username", "==", username)
+		.where("username", "==", username.toLowerCase())
 		.get()
 
-	// returns user if username exists
 	return result.docs.length > 0
 }
 
-// get user from firestore where userId === userId (passed from auth)
+export async function getUserByUsername(username) {
+	const result = await firebase
+		.firestore()
+		.collection("users")
+		.where("username", "==", username.toLowerCase())
+		.get()
+
+	return result.docs.map((item) => ({
+		...item.data(),
+		docId: item.id
+	}))
+}
+
+// get user from the firestore where userId === userId (passed from the auth)
 export async function getUserByUserId(userId) {
 	const result = await firebase
 		.firestore()
 		.collection("users")
 		.where("userId", "==", userId)
 		.get()
-
 	const user = result.docs.map((item) => ({
 		...item.data(),
 		docId: item.id
@@ -30,6 +38,7 @@ export async function getUserByUserId(userId) {
 	return user
 }
 
+// check all conditions before limit results
 export async function getSuggestedProfiles(userId, following) {
 	let query = firebase.firestore().collection("users")
 
@@ -49,7 +58,7 @@ export async function getSuggestedProfiles(userId, following) {
 }
 
 export async function updateLoggedInUserFollowing(
-	loggedInUserDocId,
+	loggedInUserDocId, // currently logged in user document id
 	profileId,
 	isFollowingProfile // true/false (am i currently following this person?)
 ) {
@@ -65,9 +74,9 @@ export async function updateLoggedInUserFollowing(
 }
 
 export async function updateFollowedUserFollowers(
-	profileDocId,
+	profileDocId, // currently logged in user document id
 	loggedInUserDocId,
-	isFollowingProfile
+	isFollowingProfile // true/false (am i currently following this person?)
 ) {
 	return firebase
 		.firestore()
@@ -105,4 +114,18 @@ export async function getPhotos(userId, following) {
 	)
 
 	return photosWithUserDetails
+}
+
+export async function getUserPhotosByUserId(userId) {
+	const result = await firebase
+		.firestore()
+		.collection("photos")
+		.where("userId", "==", userId)
+		.get()
+
+	const photos = result.docs.map((photo) => ({
+		...photo.data(),
+		docId: photo.id
+	}))
+	return photos
 }
