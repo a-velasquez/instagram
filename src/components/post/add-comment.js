@@ -21,7 +21,7 @@ export default function AddComment({
 		// create new array
 		// put new comment in there
 		// add the old comments
-		// now wh have a new array with the new comment and old comments
+		// now we have a new array with the new comment and old comments
 		setComments([{ displayName, comment }, ...comments])
 		console.log(comment)
 		setComment("")
