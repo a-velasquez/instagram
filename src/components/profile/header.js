@@ -4,9 +4,16 @@ import Skeleton from "react-loading-skeleton"
 
 export default function Header({
 	photosCount,
-	profile,
 	followerCount,
-	setFollowerCount
+	setFollowerCount,
+	profile: {
+		docId: profileDocId,
+		userId: profileUserId,
+		fullName,
+		followers,
+		following,
+		username: profileUsername
+	}
 }) {
 	const [isFollowingProfile, setIsFollowingProfile] = useState(false)
 	return null
