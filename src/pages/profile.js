@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react"
 import { useParams, useHistory } from "react-router-dom"
+import { useState, useEffect } from "react"
 import { getUserByUsername } from "../services/firebase"
 import * as ROUTES from "../constants/routes"
 import Header from "../components/header"
+import UserProfile from "../components/profile"
 
 export default function Profile() {
 	const { username } = useParams()
-	const history = useHistory()
 	const [user, setUser] = useState(null)
+	const history = useHistory()
 
 	useEffect(() => {
 		async function checkUserExists() {
@@ -26,7 +27,7 @@ export default function Profile() {
 		<div className='bg-gray-background'>
 			<Header />
 			<div className='mx-auto max-w-screen-lg'>
-				<p>{username}</p>
+				<UserProfile user={user} />
 			</div>
 		</div>
 	) : null
