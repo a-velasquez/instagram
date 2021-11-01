@@ -129,3 +129,20 @@ export async function getUserPhotosByUserId(userId) {
 	}))
 	return photos
 }
+
+export async function isUserFollowingProfile(loggedInUsername, profileUserId) {
+	const result = await firebase
+		.firestore()
+		.collection("users")
+		.where("username", "==", loggedInUsername) // logged in user
+		.where("following", "array-contains", profileUserId)
+		.get()
+
+	// wrapped in response in array although it returns an array we want the very // first item in that array
+	const [response = {}] = result.docs.map((item) => ({
+		...item.data(),
+		docId: item.id
+	}))
+
+	return response.userId
+}
