@@ -35,3 +35,7 @@ export default function Profile({ user }) {
 		</>
 	)
 }
+
+Profile.propTypes = {
+	user: PropTypes.string.isRequired
+}

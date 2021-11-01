@@ -12,3 +12,7 @@ export default function Photos({ photos }) {
 		</div>
 	)
 }
+
+Photos.propTypes = {
+	photos: PropTypes.array.isRequired
+}
