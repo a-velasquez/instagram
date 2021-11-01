@@ -30,7 +30,12 @@ export default function Profile({ user }) {
 
 	return (
 		<>
-			<Header />
+			<Header
+				photosCount={photosCollection ? photosCollection.length : 0}
+				profile={profile}
+				followerCount={followerCount}
+				setFollowerCount={dispatch}
+			/>
 			<Photos photos={photosCollection} />
 		</>
 	)
