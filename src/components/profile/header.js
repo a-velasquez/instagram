@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import Skeleton from "react-loading-skeleton"
 import useUser from "../../hooks/use-user"
 import { isUserFollowingProfile } from "../../services/firebase"
+import { DEFAULT_IMAGE_PATH } from "../../constants/paths"
 
 export default function Header({
 	photosCount,
@@ -34,7 +35,22 @@ export default function Header({
 		}
 	}, [user?.username, profileUserId])
 
-	return null
+	return (
+		<div className='grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg'>
+			{profileUsername ? (
+				<img
+					className='rounded-full h-40 w-40 flex'
+					alt={`${fullName} profile`}
+					src={`/images/avatars/${profileUsername}.jpg`}
+					onError={(e) => {
+						e.target.src = DEFAULT_IMAGE_PATH
+					}}
+				/>
+			) : (
+				<Skeleton circle height={150} width={150} count={1} />
+			)}
+		</div>
+	)
 }
 
 Header.propTypes = {
