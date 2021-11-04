@@ -19,10 +19,10 @@ export default function AddComment({
 	const handleSubmitComment = (e) => {
 		e.preventDefault()
 		// create new array
-		// put new comment in there
-		// add the old comments
+		// spread the old comments
+		// add new comment and displayName
 		// now we have a new array with the new comment and old comments
-		setComments([{ displayName, comment }, ...comments])
+		setComments([...comments, { displayName, comment }])
 		console.log(comment)
 		setComment("")
 
