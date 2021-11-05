@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import PropTypes from "prop-types"
 import Skeleton from "react-loading-skeleton"
 import useUser from "../../hooks/use-user"
 import { isUserFollowingProfile, toggleFollow } from "../../services/firebase"
 import { DEFAULT_IMAGE_PATH } from "../../constants/paths"
+import UserContext from "../../context/user"
 
 export default function Header({
 	photosCount,
@@ -18,17 +19,16 @@ export default function Header({
 		username: profileUsername
 	}
 }) {
-	const { user } = useUser() // current logged in user
-	const [isFollowingProfile, setIsFollowingProfile] = useState(false)
+	const { user: loggedInUser } = useContext(UserContext)
+	const { user } = useUser(loggedInUser?.uid)
+	const [isFollowingProfile, setIsFollowingProfile] = useState(null)
 	const activeBtnFollow = user?.username && user?.username !== profileUsername
 
-	// NEED TO FINISH
 	const handleToggleFollow = async () => {
 		setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile)
 		setFollowerCount({
 			followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1
 		})
-
 		await toggleFollow(
 			isFollowingProfile,
 			user.docId,
@@ -71,18 +71,22 @@ export default function Header({
 			<div className='flex items-center justify-center flex-col col-span-2'>
 				<div className='container flex items-center'>
 					<p className='text-2xl mr-4'>{profileUsername}</p>
-					{activeBtnFollow && (
-						<button
-							className='bg-blue-medium font-bold text-sm rounded text-white w-20 h-8'
-							type='button'
-							onClick={handleToggleFollow}
-							onKeyDown={(event) => {
-								if (event.key === "Enter") {
-									handleToggleFollow()
-								}
-							}}>
-							{isFollowingProfile ? "Unfollow" : "Follow"}
-						</button>
+					{activeBtnFollow && isFollowingProfile === null ? (
+						<Skeleton count={1} width={80} height={32} />
+					) : (
+						activeBtnFollow && (
+							<button
+								className='bg-blue-medium font-bold text-sm rounded text-white w-20 h-8'
+								type='button'
+								onClick={handleToggleFollow}
+								onKeyDown={(event) => {
+									if (event.key === "Enter") {
+										handleToggleFollow()
+									}
+								}}>
+								{isFollowingProfile ? "Unfollow" : "Follow"}
+							</button>
+						)
 					)}
 				</div>
 				<div className='container flex mt-4'>
