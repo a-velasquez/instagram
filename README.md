@@ -7,7 +7,7 @@ being public and some being private with auth listeners. Firebase firestore
 handles all the data, and that data is retrieved using custom hooks.
 
 A user can sign up for an account, login and logout, like and comment on a
-picture posted by other user's. A user has a dashboard and a timeline of their
+picture posted by other users. A user has a dashboard and a timeline of their
 photos. There are also suggested profiles and user can follow and unfollow other
 users given if they are logged in.
 
