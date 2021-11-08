@@ -1,8 +1,64 @@
 import React from "react"
+import { BrowserRouter as Router } from "react-router-dom"
 import { render, fireEvent, waitFor } from "@testing-library/react"
+import { act } from "react-dom/test-utils"
+import Login from "../../pages/login"
+import FirebaseContext from "../../context/firebase"
+import * as ROUTES from "../../constants/routes"
+
+const mockHistoryPush = jest.fn()
+jest.mock("react-router-dom", () => ({
+	...jest.requireActual("react-router-dom"),
+	useHistory: () => ({
+		push: mockHistoryPush
+	})
+}))
 
 describe("<Login />", () => {
-	it("renders the login page with a form submission and logs the user in", () => {
-		expect(1).toEqual(1)
+	beforeEach(() => {
+		jest.clearAllMocks()
+	})
+
+	it("renders the login in page with a form submission and logs the user in", async () => {
+		const succeededToLogin = jest.fn(() => Promise.resolve("I am signed in!"))
+		const firebase = {
+			auth: jest.fn(() => ({
+				signInWithEmailAndPassword: succeededToLogin
+			}))
+		}
+
+		const { getByTestId, getByPlaceholderText, queryByTestId } = render(
+			<Router>
+				<FirebaseContext.Provider value={{ firebase }}>
+					<Login />
+				</FirebaseContext.Provider>
+			</Router>
+		)
+
+		await act(async () => {
+			await fireEvent.change(getByPlaceholderText("Email address"), {
+				target: { value: "jtinnesco@gmail.com" }
+			})
+			await fireEvent.change(getByPlaceholderText("Password"), {
+				target: { value: "password" }
+			})
+			fireEvent.submit(getByTestId("login"))
+
+			expect(document.title).toEqual("Login - Instagram")
+			expect(succeededToLogin).toHaveBeenCalled()
+			expect(succeededToLogin).toHaveBeenCalledWith(
+				"jtinnesco@gmail.com",
+				"password"
+			)
+
+			await waitFor(() => {
+				expect(mockHistoryPush).toHaveBeenCalledWith(ROUTES.DASHBOARD)
+				expect(getByPlaceholderText("Email address").value).toBe(
+					"jtinnesco@gmail.com"
+				)
+				expect(getByPlaceholderText("Password").value).toBe("password")
+				expect(queryByTestId("error")).toBeFalsy()
+			})
+		})
 	})
 })
