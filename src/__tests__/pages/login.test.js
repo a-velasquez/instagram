@@ -61,4 +61,45 @@ describe("<Login />", () => {
 			})
 		})
 	})
+
+	it("renders the login in page with a form submission and fails to log a user in", async () => {
+		const failToLogin = jest.fn(() =>
+			Promise.reject(new Error("Cannot sign in"))
+		)
+		const firebase = {
+			auth: jest.fn(() => ({
+				signInWithEmailAndPassword: failToLogin
+			}))
+		}
+
+		const { getByTestId, getByPlaceholderText, queryByTestId } = render(
+			<Router>
+				<FirebaseContext.Provider value={{ firebase }}>
+					<Login />
+				</FirebaseContext.Provider>
+			</Router>
+		)
+
+		await act(async () => {
+			await fireEvent.change(getByPlaceholderText("Email address"), {
+				target: { value: "jtinnesco.com" }
+			})
+			await fireEvent.change(getByPlaceholderText("Password"), {
+				target: { value: "password" }
+			})
+			fireEvent.submit(getByTestId("login"))
+
+			expect(document.title).toEqual("Login - Instagram")
+			expect(failToLogin).toHaveBeenCalled()
+			expect(failToLogin).toHaveBeenCalledWith("jtinnesco.com", "password")
+			expect(failToLogin).rejects.toThrow("Cannot sign in")
+
+			await waitFor(() => {
+				expect(mockHistoryPush).not.toHaveBeenCalledWith(ROUTES.DASHBOARD)
+				expect(getByPlaceholderText("Email address").value).toBe("")
+				expect(getByPlaceholderText("Password").value).toBe("")
+				expect(queryByTestId("error")).toBeTruthy()
+			})
+		})
+	})
 })
